@@ -38,7 +38,7 @@ module.exports = {
     bindDn: process.env.LDAP_BIND_DN || 'cn=read-only-admin,dc=example,dc=com',
     bindCredentials: process.env.LDAP_BIND_CREDENTIALS || 'password',
     searchBase: process.env.LDAP_SEARCH_BASE || 'dc=example,dc=com',
-    searchFilter: process.env.DAP_SEARCH_FILTER || '(uid={{username}})',
+    searchFilter: process.env.LDAP_SEARCH_FILTER || '(uid={{username}})',
     tlsOptions: ldapTlsSettings()
   }
 }

@@ -8,7 +8,6 @@ module.exports = [
     path: '/',
     handler: handlers.showFrontpage,
     config: {
-      auth: false,
       description: 'Show frontpage'
     }
   },

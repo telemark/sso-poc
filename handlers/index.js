@@ -1,11 +1,19 @@
 'use strict'
 
-var fs = require('fs')
-var config = require('../config')
-var pkg = require('../package.json')
+const fs = require('fs')
+const config = require('../config')
+const pkg = require('../package.json')
+const jwt = require('jsonwebtoken')
+const getLdapUser = require('ldap-get-user')
 
 module.exports.showFrontpage = (request, reply) => {
-  reply.view('index')
+  console.log(request.auth)
+  const viewOptions = {
+    credentials: request.auth.credentials
+  }
+
+  console.log(viewOptions)
+  reply.view('index', viewOptions)
 }
 
 module.exports.showLogin = (request, reply) => {
@@ -19,102 +27,44 @@ module.exports.showLogin = (request, reply) => {
 
 module.exports.doLogin = (request, reply) => {
   const yar = request.yar
-  var jwt = require('jsonwebtoken')
-  var payload = request.payload
-  var username = payload.username
-  var password = payload.password
+  const jwt = require('jsonwebtoken')
+  const payload = request.payload
+  const username = payload.username
+  const password = payload.password
   const userId = username
-  var LdapAuth = require('ldapauth-fork')
-  var auth = new LdapAuth(config.LDAP)
+  const LdapAuth = require('ldapauth-fork')
+  const auth = new LdapAuth(config.LDAP)
 
-  auth.authenticate(username, password, function (err, user) {
-    if (err) {
-      console.error(JSON.stringify(err))
-      if (err.name || /no such user/.test(err)) {
-        var viewOptions = {
-          version: pkg.version,
-          versionName: pkg.louie.versionName,
-          versionVideoUrl: pkg.louie.versionVideoUrl,
-          systemName: pkg.louie.systemName,
-          githubUrl: pkg.repository.url,
-          loginErrorMessage: err.name || 'InvalidCredentialsError'
-        }
-        reply.view('login', viewOptions, {layout: 'layout-login'})
+  auth.authenticate(username, password, (error, user) => {
+    if (error) {
+      console.error(JSON.stringify(error))
+      if (error.name || /no such user/.test(error)) {
+        reply.view('login', {}, {layout: 'layout-login'})
       }
     } else {
-      var tokenOptions = {
+      const tokenOptions = {
         expiresIn: '1h',
         issuer: 'https://auth.t-fk.no'
       }
-      var data = {
+      const data = {
         cn: user.cn,
         userId: user.sAMAccountName || user.uid || ''
       }
-      var token = jwt.sign(data, config.JWT_SECRET, tokenOptions)
+      const token = jwt.sign(data, config.JWT_SECRET, tokenOptions)
       request.cookieAuth.set({
         token: token,
         isAuthenticated: true,
         data: data
       })
-      auth.close(function (err) {
+      auth.close((err) => {
         if (err) {
           console.error(err)
         }
       })
-      request.seneca.act({role: 'buddy', list: 'contact-classes', userId: userId}, (error, payload) => {
-        var myContactClasses = []
-        if (error) {
-          reply(error)
-        } else {
-          if (Array.isArray(payload)) {
-            myContactClasses = payload
-          }
-          yar.set('myContactClasses', myContactClasses)
-          reply.redirect('/')
-        }
-      })
+      reply.redirect('/')
     }
   })
 }
-
-/*
- // For local testing
- module.exports.doLogin = (request, reply) => {
- const yar = request.yar
- var jwt = require('jsonwebtoken')
- var payload = request.payload
- var username = payload.username
- const userId = username
- // var password = payload.password
- var user = {
- cn: username,
- userId: username
- }
- var tokenOptions = {
- expiresIn: '1h',
- issuer: 'https://auth.t-fk.no'
- }
- var token = jwt.sign(user, config.JWT_SECRET, tokenOptions)
- request.cookieAuth.set({
- token: token,
- isAuthenticated: true,
- data: user
- })
-
- request.seneca.act({role: 'buddy', list: 'contact-classes', userId: userId}, (error, payload) => {
- var myContactClasses = []
- if (error) {
- reply(error)
- } else {
- if (Array.isArray(payload)) {
- myContactClasses = payload
- }
- yar.set('myContactClasses', myContactClasses)
- reply.redirect('/')
- }
- })
- }
- */
 
 module.exports.doLogout = (request, reply) => {
   request.cookieAuth.clear()
@@ -122,8 +72,44 @@ module.exports.doLogout = (request, reply) => {
 }
 
 module.exports.handleSSO = (request, reply) => {
-  const ip = request.headers['x-forwarded-for'] || request.info.remoteAddress
-  console.log(request)
-  reply(`Hello ${ip}`)
-  //reply.redirect('/')
+  const receivedToken = request.query.jwt
+  const jwtDecrypted = jwt.verify(receivedToken, config.JWT_SECRET)
+
+  if (!jwtDecrypted) {
+    reply('Illegal jwt')
+  }
+
+  const userName = jwtDecrypted.userName
+
+  const options = {
+    user: userName,
+    url: config.LDAP.url,
+    bindDn: config.LDAP.bindDn,
+    bindCredentials: config.LDAP.bindCredentials,
+    searchBase: config.LDAP.searchBase,
+    searchFilter: config.LDAP.searchFilter
+  }
+
+  getLdapUser(options).then((results) => {
+
+    const user = results[0]
+
+    const tokenOptions = {
+      expiresIn: '1h',
+      issuer: 'https://auth.t-fk.no'
+    }
+    const data = {
+      cn: user.cn,
+      userId: user.sAMAccountName || user.uid || ''
+    }
+    const token = jwt.sign(data, config.JWT_SECRET, tokenOptions)
+    request.cookieAuth.set({
+      token: token,
+      isAuthenticated: true,
+      data: data
+    })
+    reply.redirect('/')
+  }).catch((error) => {
+    reply(error)
+  })
 }
