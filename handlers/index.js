@@ -90,9 +90,7 @@ module.exports.handleSSO = (request, reply) => {
     searchFilter: config.LDAP.searchFilter
   }
 
-  getLdapUser(options).then((results) => {
-
-    const user = results[0]
+  getLdapUser(options).then((user) => {
 
     const tokenOptions = {
       expiresIn: '1h',
