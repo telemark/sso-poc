@@ -1,11 +1,11 @@
 ###########################################################
 #
-# Dockerfile for MinElev
+# Dockerfile for sso-poc
 #
 ###########################################################
 
-# Setting the base to nodejs 4.6.2
-FROM mhart/alpine-node:4.6.2
+# Setting the base to nodejs 6.9.1
+FROM mhart/alpine-node:6.9.1
 
 # Maintainer
 MAINTAINER Geir Gåsodden
@@ -28,10 +28,10 @@ WORKDIR "/src"
 RUN npm install --production
 
 # Env variables
-ENV SERVER_PORT 3000
+ENV SERVER_PORT 8000
 
 # Expose 3000
-EXPOSE 3000
+EXPOSE 8000
 
 # Startup
-ENTRYPOINT node --max-old-space-size=4096 standalone.js
+ENTRYPOINT node standalone.js

@@ -1,7 +1,7 @@
 {
   "name": "sso-poc",
   "version": "1.0.0",
-  "description": "Admin interface for teachers",
+  "description": "SSO poc",
   "license": "MIT",
   "private": true,
   "author": {
@@ -11,16 +11,16 @@
   },
   "main": "index.js",
   "engines": {
-    "node": ">=4.6.2"
+    "node": ">=6.9.1"
   },
   "scripts": {
     "start": "node standalone.js",
+    "start-dev": "NODE_ENV=development node standalone.js",
     "test": "standard && nsp check && tap --reporter=spec test/*.js",
     "coverage": "tap test/*.js --coverage",
     "coveralls": "tap --cov --coverage-report=lcov test/*.js && cat coverage/lcov.info | coveralls",
     "setup": "npm install && node setup.js",
-    "standard-fix": "standard --fix",
-    "generate-test-token": "node utils/generate-test-token.js"
+    "standard-fix": "standard --fix"
   },
   "keywords": [
     "poc",
@@ -33,10 +33,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/sso-poc/minelev.git"
+    "url": "http://github.com/telemark/sso-poc.git"
   },
   "bugs": {
-    "url": "http://github.com/sso-poc/minelev/issues"
+    "url": "http://github.com/telemark/sso-poc/issues"
   },
   "devDependencies": {
     "coveralls": "2.11.15",
@@ -47,7 +47,7 @@
   "dependencies": {
     "handlebars": "4.0.6",
     "hapi": "16.0.1",
-    "hapi-auth-cookie": "6.1.1",
+    "hapi-auth-cookie-issamesite-patch": "6.1.2",
     "hapi-auth-jwt2": "7.2.4",
     "hoek": "4.1.0",
     "inert": "4.0.3",
