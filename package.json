@@ -53,7 +53,7 @@
     "hoek": "4.1.0",
     "inert": "4.0.3",
     "jsonwebtoken": "7.1.9",
-    "ldap-get-user": "1.0.0",
+    "ldap-get-user": "1.0.2",
     "ldapauth-fork": "2.5.4",
     "vision": "4.1.1",
     "wreck": "10.0.0",
