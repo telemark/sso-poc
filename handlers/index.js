@@ -79,7 +79,8 @@ module.exports.handleSSO = (request, reply) => {
         bindDn: config.LDAP.bindDn,
         bindCredentials: config.LDAP.bindCredentials,
         searchBase: config.LDAP.searchBase,
-        searchFilter: config.LDAP.searchFilter
+        searchFilter: config.LDAP.searchFilter,
+        tlsOptions: config.LDAP.tlsOptions
       }
 
       getLdapUser(options).then((user) => {
