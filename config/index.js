@@ -5,25 +5,9 @@
 // For Active Directory:
 // searchFilter: '(sAMAccountName={{username}})'
 
-const path = require('path')
 const SERVER_PORT = process.env.SERVER_PORT || 8000
 const SSO_IPS = process.env.SSO_IPS ? process.env.SSO_IPS.split(',') : ['139.164.160.2', '213.188.19.179']
-
-function ldapTlsSettings () {
-  var fs = require('fs')
-  var config = false
-
-  if (process.env.MINELEV_LDAP_TLS_SETTINGS) {
-    config = {
-      rejectUnauthorized: process.env.LDAP_TLS_REJECT_UNAUTHORIZED ? true : false, // eslint-disable-line no-unneeded-ternary
-      ca: [
-        fs.readFileSync(path.join(__dirname, process.env.LDAP_TLS_CA_PATH))
-      ]
-    }
-  }
-
-  return config
-}
+const ldapTlsSettings = require('../lib/ldap-tls-settings')
 
 module.exports = {
   SERVER_PORT: SERVER_PORT,

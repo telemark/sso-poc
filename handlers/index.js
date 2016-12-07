@@ -3,6 +3,7 @@
 const config = require('../config')
 const jwt = require('jsonwebtoken')
 const getLdapUser = require('ldap-get-user')
+const ldapTlsSettings = require('../lib/ldap-tls-settings')
 
 module.exports.showFrontpage = (request, reply) => {
   const viewOptions = {
@@ -79,7 +80,8 @@ module.exports.handleSSO = (request, reply) => {
         bindDn: config.LDAP.bindDn,
         bindCredentials: config.LDAP.bindCredentials,
         searchBase: config.LDAP.searchBase,
-        searchFilter: config.LDAP.searchFilter
+        searchFilter: config.LDAP.searchFilter,
+        tlsOptions: ldapTlsSettings()
       }
 
       getLdapUser(options).then((user) => {
