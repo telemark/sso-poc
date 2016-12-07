@@ -1,18 +1,14 @@
 'use strict'
 
-const fs = require('fs')
 const config = require('../config')
-const pkg = require('../package.json')
 const jwt = require('jsonwebtoken')
 const getLdapUser = require('ldap-get-user')
 
 module.exports.showFrontpage = (request, reply) => {
-  console.log(request.auth)
   const viewOptions = {
     credentials: request.auth.credentials
   }
 
-  console.log(viewOptions)
   reply.view('index', viewOptions)
 }
 
@@ -26,12 +22,10 @@ module.exports.showLogin = (request, reply) => {
 }
 
 module.exports.doLogin = (request, reply) => {
-  const yar = request.yar
   const jwt = require('jsonwebtoken')
   const payload = request.payload
   const username = payload.username
   const password = payload.password
-  const userId = username
   const LdapAuth = require('ldapauth-fork')
   const auth = new LdapAuth(config.LDAP)
 
@@ -91,7 +85,6 @@ module.exports.handleSSO = (request, reply) => {
   }
 
   getLdapUser(options).then((user) => {
-
     const tokenOptions = {
       expiresIn: '1h',
       issuer: 'https://auth.t-fk.no'

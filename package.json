@@ -17,6 +17,7 @@
     "start": "node standalone.js",
     "start-dev": "NODE_ENV=development node standalone.js",
     "test": "standard && nsp check && tap --reporter=spec test/*.js",
+    "test-offline": "standard && tap --reporter=spec test/*.js",
     "coverage": "tap test/*.js --coverage",
     "coveralls": "tap --cov --coverage-report=lcov test/*.js && cat coverage/lcov.info | coveralls",
     "setup": "npm install && node setup.js",
@@ -55,8 +56,6 @@
     "jsonwebtoken": "7.2.0",
     "ldap-get-user": "1.0.3",
     "ldapauth-fork": "2.5.4",
-    "vision": "4.1.1",
-    "wreck": "10.0.0",
-    "yar": "8.1.1"
+    "vision": "4.1.1"
   }
 }
