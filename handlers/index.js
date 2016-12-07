@@ -67,40 +67,40 @@ module.exports.doLogout = (request, reply) => {
 
 module.exports.handleSSO = (request, reply) => {
   const receivedToken = request.query.jwt
-  const jwtDecrypted = jwt.verify(receivedToken, config.JWT_SECRET)
+  jwt.verify(receivedToken, config.JWT_SECRET, (error, decrypted) => {
+    if (error) {
+      reply(error.message || 'Error with token')
+    } else {
+      const userName = decrypted.userName
 
-  if (!jwtDecrypted) {
-    reply('Illegal jwt')
-  }
+      const options = {
+        user: userName,
+        url: config.LDAP.url,
+        bindDn: config.LDAP.bindDn,
+        bindCredentials: config.LDAP.bindCredentials,
+        searchBase: config.LDAP.searchBase,
+        searchFilter: config.LDAP.searchFilter
+      }
 
-  const userName = jwtDecrypted.userName
-
-  const options = {
-    user: userName,
-    url: config.LDAP.url,
-    bindDn: config.LDAP.bindDn,
-    bindCredentials: config.LDAP.bindCredentials,
-    searchBase: config.LDAP.searchBase,
-    searchFilter: config.LDAP.searchFilter
-  }
-
-  getLdapUser(options).then((user) => {
-    const tokenOptions = {
-      expiresIn: '1h',
-      issuer: 'https://auth.t-fk.no'
+      getLdapUser(options).then((user) => {
+        const tokenOptions = {
+          expiresIn: '1h',
+          issuer: 'https://auth.t-fk.no'
+        }
+        const data = {
+          cn: user.cn,
+          userId: user.sAMAccountName || user.uid || ''
+        }
+        const token = jwt.sign(data, config.JWT_SECRET, tokenOptions)
+        request.cookieAuth.set({
+          token: token,
+          isAuthenticated: true,
+          data: data
+        })
+        reply.redirect('/')
+      }).catch((error) => {
+        reply(error)
+      })
     }
-    const data = {
-      cn: user.cn,
-      userId: user.sAMAccountName || user.uid || ''
-    }
-    const token = jwt.sign(data, config.JWT_SECRET, tokenOptions)
-    request.cookieAuth.set({
-      token: token,
-      isAuthenticated: true,
-      data: data
-    })
-    reply.redirect('/')
-  }).catch((error) => {
-    reply(error)
   })
 }
