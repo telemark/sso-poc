@@ -13,7 +13,7 @@ function ldapTlsSettings () {
   var fs = require('fs')
   var config = false
 
-  if (process.env.MINELEV_LDAP_TLS_SETTINGS) {
+  if (process.env.LDAP_TLS_SETTINGS) {
     config = {
       rejectUnauthorized: process.env.LDAP_TLS_REJECT_UNAUTHORIZED ? true : false, // eslint-disable-line no-unneeded-ternary
       ca: [
