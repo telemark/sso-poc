@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "handlebars": "4.0.6",
-    "hapi": "16.0.2",
+    "hapi": "16.0.3",
     "hapi-auth-cookie-issamesite-patch": "6.1.2",
     "hapi-auth-jwt2": "7.2.4",
     "hoek": "4.1.0",
