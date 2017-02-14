@@ -20,7 +20,7 @@ module.exports.showLogin = (request, reply) => {
   } else {
     const viewOptions = {
       AUTH_LOGIN_URL: config.AUTH_LOGIN_URL,
-      REDIRECT_URL: `${request.server.info.protocol}://${request.server.info.host}/ssostart`
+      REDIRECT_URL: config.REDIRECT_URL
     }
     reply.view('login', viewOptions, {layout: 'layout-login'})
   }
