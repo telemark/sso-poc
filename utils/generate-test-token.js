@@ -7,7 +7,8 @@ const tokenOptions = {
   issuer: 'https://auth.t-fk.no'
 }
 const data = {
-  userName: 'riemann'
+  userName: 'riemann',
+  redirectUrl: 'https://sso.poc.t-fk.win/ssostart'
 }
 
 const token = jwt.sign(data, config.JWT_SECRET, tokenOptions)
