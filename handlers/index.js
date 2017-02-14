@@ -1,8 +1,9 @@
 'use strict'
 
 const config = require('../config')
+const axios = require('axios')
 const jwt = require('jsonwebtoken')
-const getLdapUser = require('ldap-get-user')
+const encryptor = require('simple-encryptor')(config.ENCRYPTOR_SECRET)
 
 module.exports.showFrontpage = (request, reply) => {
   const viewOptions = {
@@ -17,47 +18,12 @@ module.exports.showLogin = (request, reply) => {
   if (config.SSO_IPS.includes(ip)) {
     reply.redirect(config.SSO_LOGIN_URL)
   } else {
-    reply.view('login', {}, {layout: 'layout-login'})
-  }
-}
-
-module.exports.doLogin = (request, reply) => {
-  const jwt = require('jsonwebtoken')
-  const payload = request.payload
-  const username = payload.username
-  const password = payload.password
-  const LdapAuth = require('ldapauth-fork')
-  const auth = new LdapAuth(config.LDAP)
-
-  auth.authenticate(username, password, (error, user) => {
-    if (error) {
-      console.error(JSON.stringify(error))
-      if (error.name || /no such user/.test(error)) {
-        reply.view('login', {}, {layout: 'layout-login'})
-      }
-    } else {
-      const tokenOptions = {
-        expiresIn: '1h',
-        issuer: 'https://auth.t-fk.no'
-      }
-      const data = {
-        cn: user.cn,
-        userId: user.sAMAccountName || user.uid || ''
-      }
-      const token = jwt.sign(data, config.JWT_SECRET, tokenOptions)
-      request.cookieAuth.set({
-        token: token,
-        isAuthenticated: true,
-        data: data
-      })
-      auth.close((err) => {
-        if (err) {
-          console.error(err)
-        }
-      })
-      reply.redirect('/')
+    const viewOptions = {
+      AUTH_LOGIN_URL: config.AUTH_LOGIN_URL,
+      REDIRECT_URL: `${request.server.info.protocol}://${request.server.info.host}/ssostart`
     }
-  })
+    reply.view('login', viewOptions, {layout: 'layout-login'})
+  }
 }
 
 module.exports.doLogout = (request, reply) => {
@@ -67,41 +33,35 @@ module.exports.doLogout = (request, reply) => {
 
 module.exports.handleSSO = (request, reply) => {
   const receivedToken = request.query.jwt
-  jwt.verify(receivedToken, config.JWT_SECRET, (error, decrypted) => {
+  jwt.verify(receivedToken, config.JWT_SECRET, (error, decoded) => {
     if (error) {
       reply(error.message || 'Error with token')
     } else {
-      const userName = decrypted.userName
+      const jwtData = encryptor.decrypt(decoded.data)
+      const sessionUrl = `${config.SESSION_STORAGE_URL}/${jwtData.session}`
 
-      const options = {
-        user: userName,
-        url: config.LDAP.url,
-        bindDn: config.LDAP.bindDn,
-        bindCredentials: config.LDAP.bindCredentials,
-        searchBase: config.LDAP.searchBase,
-        searchFilter: config.LDAP.searchFilter,
-        tlsOptions: config.LDAP.tlsOptions
-      }
-
-      getLdapUser(options).then((user) => {
-        const tokenOptions = {
-          expiresIn: '1h',
-          issuer: 'https://auth.t-fk.no'
-        }
-        const data = {
-          cn: user.cn,
-          userId: user.sAMAccountName || user.uid || ''
-        }
-        const token = jwt.sign(data, config.JWT_SECRET, tokenOptions)
-        request.cookieAuth.set({
-          token: token,
-          isAuthenticated: true,
-          data: data
+      axios.get(sessionUrl)
+        .then(result => {
+          const user = encryptor.decrypt(result.data.value)
+          const tokenOptions = {
+            expiresIn: '1h',
+            issuer: 'https://auth.t-fk.no'
+          }
+          const data = {
+            cn: user.cn,
+            userId: user.sAMAccountName || user.uid || ''
+          }
+          const token = jwt.sign(data, config.JWT_SECRET, tokenOptions)
+          request.cookieAuth.set({
+            token: token,
+            isAuthenticated: true,
+            data: data
+          })
+          reply.redirect('/')
         })
-        reply.redirect('/')
-      }).catch((error) => {
-        reply(error)
-      })
+        .catch(error => {
+          reply(error)
+        })
     }
   })
 }

@@ -11,7 +11,7 @@
   },
   "main": "index.js",
   "engines": {
-    "node": ">=6.9.2"
+    "node": ">=6.9.5"
   },
   "scripts": {
     "start": "node standalone.js",
@@ -47,6 +47,7 @@
     "tap": "10.0.2"
   },
   "dependencies": {
+    "axios": "0.15.3",
     "handlebars": "4.0.6",
     "hapi": "16.1.0",
     "hapi-auth-cookie-issamesite-patch": "6.1.2",
@@ -54,8 +55,8 @@
     "hoek": "4.1.0",
     "inert": "4.1.0",
     "jsonwebtoken": "7.3.0",
-    "ldap-get-user": "1.0.5",
-    "ldapauth-fork": "3.0.0",
-    "vision": "4.1.1"
+    "simple-encryptor": "1.1.0",
+    "vision": "4.1.1",
+    "yar": "8.1.2"
   }
 }

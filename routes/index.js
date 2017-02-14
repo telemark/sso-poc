@@ -30,15 +30,6 @@ module.exports = [
     }
   },
   {
-    method: 'POST',
-    path: '/login',
-    config: {
-      handler: handlers.doLogin,
-      description: 'Login',
-      auth: false
-    }
-  },
-  {
     method: 'GET',
     path: '/logout',
     handler: handlers.doLogout,
