@@ -53,7 +53,7 @@
     "hapi-auth-jwt2": "7.2.4",
     "hoek": "4.1.0",
     "inert": "4.1.0",
-    "jsonwebtoken": "7.2.1",
+    "jsonwebtoken": "7.3.0",
     "ldap-get-user": "1.0.5",
     "ldapauth-fork": "3.0.0",
     "vision": "4.1.1"
