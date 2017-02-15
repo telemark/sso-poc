@@ -13,6 +13,11 @@ module.exports.showFrontpage = (request, reply) => {
   reply.view('index', viewOptions)
 }
 
+module.exports.showMyIp = (request, reply) => {
+  const ip = request.headers['x-forwarded-for'] || request.info.remoteAddress
+  reply({ip: ip})
+}
+
 module.exports.showLogin = (request, reply) => {
   const ip = request.headers['x-forwarded-for'] || request.info.remoteAddress
   if (config.SSO_IPS.includes(ip)) {

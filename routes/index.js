@@ -13,6 +13,15 @@ module.exports = [
   },
   {
     method: 'GET',
+    path: '/ip',
+    handler: handlers.showMyIp,
+    config: {
+      auth: false,
+      description: 'Show ip'
+    }
+  },
+  {
+    method: 'GET',
     path: '/ssostart',
     handler: handlers.handleSSO,
     config: {
