@@ -11,7 +11,7 @@
   },
   "main": "index.js",
   "engines": {
-    "node": ">=6.9.5"
+    "node": ">=7.5.0"
   },
   "scripts": {
     "start": "node standalone.js",
@@ -22,7 +22,8 @@
     "coveralls": "tap --cov --coverage-report=lcov test/**/*.js && cat coverage/lcov.info | coveralls",
     "setup": "npm install && node setup.js",
     "standard-fix": "standard --fix",
-    "generate-token": "node utils/generate-test-token.js"
+    "generate-token": "node utils/generate-test-token.js",
+    "now-deploy": "npm test && now && now alias"
   },
   "keywords": [
     "poc",
