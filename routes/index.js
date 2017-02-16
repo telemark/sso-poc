@@ -31,15 +31,6 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/login',
-    config: {
-      handler: handlers.showLogin,
-      description: 'Show the Logingpage',
-      auth: false
-    }
-  },
-  {
-    method: 'GET',
     path: '/logout',
     handler: handlers.doLogout,
     config: {

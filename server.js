@@ -68,7 +68,7 @@ server.register(plugins, error => {
     password: config.COOKIE_SECRET,
     cookie: 'tilskudd-session',
     validateFunc: validateSession,
-    redirectTo: config.LOGIN_URL,
+    redirectTo: `${config.SSO_URL}?origin=${config.ORIGIN_URL}`,
     isSecure: process.env.NODE_ENV !== 'development',
     isSameSite: 'Lax'
   })

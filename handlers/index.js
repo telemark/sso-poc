@@ -18,19 +18,6 @@ module.exports.showMyIp = (request, reply) => {
   reply({ip: ip})
 }
 
-module.exports.showLogin = (request, reply) => {
-  const ip = request.headers['x-forwarded-for'] || request.info.remoteAddress
-  if (config.SSO_IPS.includes(ip)) {
-    reply.redirect(config.SSO_LOGIN_URL)
-  } else {
-    const viewOptions = {
-      AUTH_LOGIN_URL: config.AUTH_LOGIN_URL,
-      REDIRECT_URL: config.REDIRECT_URL
-    }
-    reply.view('login', viewOptions, {layout: 'layout-login'})
-  }
-}
-
 module.exports.doLogout = (request, reply) => {
   request.cookieAuth.clear()
   reply.redirect('/')
