@@ -61,7 +61,7 @@
     "hapi": "16.1.1",
     "hapi-auth-cookie-issamesite-patch": "6.1.2",
     "hapi-auth-jwt2": "7.2.4",
-    "hoek": "4.1.0",
+    "hoek": "4.1.1",
     "inert": "4.2.0",
     "jsonwebtoken": "7.3.0",
     "simple-encryptor": "1.1.0",
