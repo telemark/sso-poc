@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "node standalone.js",
-    "start-dev": "NODE_ENV=development node standalone.js",
+    "dev": "NODE_ENV=development node standalone.js",
     "test": "standard && nsp check && tap --reporter=spec test/**/*.js",
     "test-offline": "standard && tap --reporter=spec test/**/*.js",
     "coverage": "tap test/**/*.js --coverage",
@@ -54,10 +54,10 @@
     }
   },
   "devDependencies": {
-    "coveralls": "2.13.1",
-    "nsp": "2.6.3",
-    "standard": "10.0.2",
-    "tap": "10.3.2"
+    "coveralls": "3.0.0",
+    "nsp": "3.2.1",
+    "standard": "11.0.1",
+    "tap": "11.1.4"
   },
   "dependencies": {
     "axios": "0.18.0",
@@ -65,7 +65,7 @@
     "hapi": "16.6.3",
     "hapi-auth-cookie-issamesite-patch": "6.1.2",
     "hapi-auth-jwt2": "7.4.1",
-    "hoek": "4.2.1",
+    "hoek": "5.0.3",
     "inert": "4.2.1",
     "jsonwebtoken": "8.2.1",
     "simple-encryptor": "1.1.0",
