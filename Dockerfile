@@ -1,14 +1,5 @@
-###########################################################
-#
-# Dockerfile for sso-poc
-#
-###########################################################
-
-# Setting the base to nodejs 7.5.0
-FROM node:7.5.0-alpine
-
-# Maintainer
-MAINTAINER Geir Gåsodden
+# Setting the base to nodejs 10.0.0
+FROM node:10.0.0-alpine
 
 #### Begin setup ####
 
