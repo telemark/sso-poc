@@ -70,6 +70,6 @@
     "jsonwebtoken": "8.2.1",
     "simple-encryptor": "1.1.0",
     "vision": "4.1.1",
-    "yar": "8.1.2"
+    "yar": "9.0.1"
   }
 }
