@@ -1,6 +1,6 @@
 {
   "name": "sso-poc",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "SSO poc",
   "license": "MIT",
   "private": true,
