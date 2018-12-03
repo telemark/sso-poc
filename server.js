@@ -26,11 +26,11 @@ server.connection({
 })
 
 const plugins = [
-  {register: Yar, options: yarOptions},
-  {register: vision},
-  {register: inert},
-  {register: hapiAuthCookie},
-  {register: hapiAuthJwt2}
+  { register: Yar, options: yarOptions },
+  { register: vision },
+  { register: inert },
+  { register: hapiAuthCookie },
+  { register: hapiAuthJwt2 }
 ]
 
 server.register(plugins, error => {

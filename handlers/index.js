@@ -15,7 +15,7 @@ module.exports.showFrontpage = (request, reply) => {
 
 module.exports.showMyIp = (request, reply) => {
   const ip = request.headers['x-forwarded-for'] || request.info.remoteAddress
-  reply({ip: ip})
+  reply({ ip: ip })
 }
 
 module.exports.doLogout = (request, reply) => {
