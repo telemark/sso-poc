@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "axios": "0.18.0",
-    "handlebars": "4.1.0",
+    "handlebars": "4.1.1",
     "hapi": "16.7.0",
     "hapi-auth-cookie-issamesite-patch": "6.1.2",
     "hapi-auth-jwt2": "7.4.1",
