@@ -61,7 +61,7 @@
   "dependencies": {
     "axios": "0.19.0",
     "handlebars": "4.1.2",
-    "hapi": "16.7.0",
+    "hapi": "18.1.0",
     "hapi-auth-cookie-issamesite-patch": "6.1.2",
     "hapi-auth-jwt2": "7.4.1",
     "hoek": "6.1.3",
